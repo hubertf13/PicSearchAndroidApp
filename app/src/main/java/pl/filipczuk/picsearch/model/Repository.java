@@ -13,6 +13,8 @@ import javax.inject.Singleton;
 import pl.filipczuk.picsearch.BuildConfig;
 import pl.filipczuk.picsearch.api.PexelsApi;
 import pl.filipczuk.picsearch.api.PexelsResponse;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
 @Singleton
@@ -51,19 +53,33 @@ public class Repository {
 
 
     private void queryPexelsSearchApi(String query, int page) {
-        PexelsResponse response;
-        try {
-            Response<PexelsResponse> execute = pexelsApi.searchPictures(query, page, perPage).execute();
-            response = execute.body();
-            System.out.println(execute);
+//        PexelsResponse response;
+//        try {
+            pexelsApi.searchPictures(query, page, perPage).enqueue(new Callback<>() {
+                @Override
+                public void onResponse(Call<PexelsResponse> call, Response<PexelsResponse> response) {
+                    PexelsResponse pexelsResponse = response.body();
+                    List<Picture> pictures = pexelsResponse.getPhotos();
+                    liveDataPictures.postValue(pictures);
+                }
 
-            if (response != null) {
-                List<Picture> pictures = response.getPhotos();
-                liveDataPictures.postValue(pictures);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+                @Override
+                public void onFailure(Call<PexelsResponse> call, Throwable t) {
+
+                }
+            });
+
+//            Response<PexelsResponse> execute = pexelsApi.searchPictures(query, page, perPage).execute();
+//            response = execute.body();
+//            System.out.println(execute);
+//
+//            if (response != null) {
+//                List<Picture> pictures = response.getPhotos();
+//                liveDataPictures.postValue(pictures);
+//            }
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     public void insert(Picture picture) {
