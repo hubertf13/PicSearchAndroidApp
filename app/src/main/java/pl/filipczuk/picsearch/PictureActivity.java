@@ -1,5 +1,7 @@
 package pl.filipczuk.picsearch;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -27,7 +29,6 @@ public class PictureActivity extends AppCompatActivity {
     private ImageView image;
     private TextView photographerName;
     private Button button;
-    private Integer page;
     private GalleryViewModel viewModel;
 
     @Override
@@ -36,7 +37,6 @@ public class PictureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_picture);
 
         viewModel = new ViewModelProvider(this).get(GalleryViewModel.class);
-        page = getIntent().getIntExtra("pageNumber", 1);
         image = findViewById(R.id.separate_picture_iv);
         photographerName = findViewById(R.id.pic_photographer_tv);
         button = findViewById(R.id.save_button);
@@ -56,12 +56,5 @@ public class PictureActivity extends AppCompatActivity {
             Picasso.get().load(src).into(image);
             photographerName.setText(String.valueOf(photographer));
         }
-    }
-
-    @Override
-    protected void onPause() {
-        getIntent().putExtra("pageNumber", page);
-
-        super.onPause();
     }
 }

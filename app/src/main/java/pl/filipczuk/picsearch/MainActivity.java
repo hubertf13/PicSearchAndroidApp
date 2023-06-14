@@ -70,28 +70,26 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
     }
 
     @Override
-    public void onResume() {
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences.Editor editor = getSharedPreferences("MyPrefers", MODE_PRIVATE).edit();
+        editor.putString("query", searchQueryEditText.getText().toString());
+        editor.putInt("page", page);
+        editor.apply();
+    }
+
+    @Override
+    protected void onResume() {
         super.onResume();
-        SharedPreferences sh = getSharedPreferences("MySharedPref", MODE_PRIVATE);
-        String query = sh.getString("query", "");
-        int pageNumber = sh.getInt("page", 1);
+        SharedPreferences prefs = getSharedPreferences("MyPrefers", MODE_PRIVATE);
+        String query = prefs.getString("query", "");
+        int pageNumber = prefs.getInt("page", 1);
 
         searchQueryEditText.setText(query);
         page = pageNumber;
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        SharedPreferences sharedPreferences = getSharedPreferences("MySharedPref", MODE_PRIVATE);
-        SharedPreferences.Editor myEdit = sharedPreferences.edit();
-
-        myEdit.putString("query", searchQueryEditText.getText().toString());
-        myEdit.putInt("page", page);
-        myEdit.apply();
-    }
-
-//    @Override
+    //    @Override
 //    public void onLocationChanged(@NonNull Location location) {
 //        try {
 //            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -148,6 +146,9 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
     }
 
     private void setOnButtonsClick() {
+        if (page == null) {
+            page = 1;
+        }
         searchButton.setOnClickListener(view -> {
             page = 1;
             searchPexels();
@@ -185,7 +186,6 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
     public void onListItemClick(int position) {
         Intent intent = new Intent(getApplicationContext(), PictureActivity.class);
         intent.putExtra("selectedPicture", pictures.get(position));
-        intent.putExtra("pageNumber", page);
 
         startActivity(intent);
     }
@@ -201,10 +201,27 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
         int id = item.getItemId();
         if (id == R.id.favouritesMenu) {
             Intent intent = new Intent(getApplicationContext(), FavouritesActivity.class);
-            intent.putExtra("pageNumber", page);
 
             startActivity(intent);
         }
         return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("query", searchQueryEditText.getText().toString());
+        outState.putInt("page", page);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        String query = savedInstanceState.getString("query");
+        int pageNumber = savedInstanceState.getInt("page");
+
+        searchQueryEditText.setText(query);
+        page = pageNumber;
     }
 }
