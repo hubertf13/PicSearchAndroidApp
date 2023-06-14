@@ -1,4 +1,4 @@
-package pl.filipczuk.picsearch.model;
+package pl.filipczuk.picsearch.database;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
@@ -8,6 +8,8 @@ import androidx.room.Query;
 import androidx.room.Transaction;
 
 import java.util.List;
+
+import pl.filipczuk.picsearch.model.Picture;
 
 @Dao
 public interface PictureDao {

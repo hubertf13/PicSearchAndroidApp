@@ -10,7 +10,7 @@ import javax.inject.Inject;
 
 import dagger.hilt.android.lifecycle.HiltViewModel;
 import pl.filipczuk.picsearch.model.Picture;
-import pl.filipczuk.picsearch.model.Repository;
+import pl.filipczuk.picsearch.database.Repository;
 
 @HiltViewModel
 public class GalleryViewModel extends ViewModel {

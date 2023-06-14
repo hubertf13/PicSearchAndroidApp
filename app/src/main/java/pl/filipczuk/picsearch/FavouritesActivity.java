@@ -1,6 +1,5 @@
 package pl.filipczuk.picsearch;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import pl.filipczuk.picsearch.model.ListItemClickListener;
+import pl.filipczuk.picsearch.ui.view.ListItemClickListener;
 import pl.filipczuk.picsearch.model.Picture;
 import pl.filipczuk.picsearch.ui.view.GalleryViewModel;
 import pl.filipczuk.picsearch.ui.view.PexelsAdapter;

@@ -1,21 +1,9 @@
 package pl.filipczuk.picsearch;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.location.LocationRequest;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Parcelable;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,30 +14,20 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.room.Room;
 
-import com.google.android.gms.location.LocationSettingsRequest;
-import com.google.android.gms.location.Priority;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import pl.filipczuk.picsearch.model.ListItemClickListener;
 import pl.filipczuk.picsearch.model.Picture;
-import pl.filipczuk.picsearch.model.PictureDao;
 import pl.filipczuk.picsearch.ui.view.GalleryViewModel;
+import pl.filipczuk.picsearch.ui.view.ListItemClickListener;
 import pl.filipczuk.picsearch.ui.view.PexelsAdapter;
 
 @AndroidEntryPoint
-public class MainActivity extends AppCompatActivity implements ListItemClickListener, LocationListener {
+public class MainActivity extends AppCompatActivity implements ListItemClickListener/*, LocationListener*/ {
 
     private EditText searchQueryEditText;
     private Button searchButton;
@@ -61,18 +39,18 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
     private PexelsAdapter pexelsAdapter;
     private GalleryViewModel viewModel;
     private Integer page;
-    final static String[] PERMISSIONS = {Manifest.permission.ACCESS_COARSE_LOCATION};
-    final static int PERMISSIONS_ALL = 1;
-    private LocationManager locationManager;
+//    final static String[] PERMISSIONS = {Manifest.permission.ACCESS_COARSE_LOCATION};
+//    final static int PERMISSIONS_ALL = 1;
+//    private LocationManager locationManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        requestPermissions(PERMISSIONS, PERMISSIONS_ALL);
-        requestLocation();
+//        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+//        requestPermissions(PERMISSIONS, PERMISSIONS_ALL);
+//        requestLocation();
 
         getComponents();
         setOnButtonsClick();
@@ -113,45 +91,45 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
         myEdit.apply();
     }
 
-    @Override
-    public void onLocationChanged(@NonNull Location location) {
-        try {
-            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            String locality = addresses.get(0).getLocality();
-            String countryName = addresses.get(0).getCountryName();
-            System.out.println(countryName);
-            System.out.println(countryName);
-            System.out.println(countryName);
-            System.out.println(countryName);
-            searchQueryEditText.setText(countryName);
-            searchPexels();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+//    @Override
+//    public void onLocationChanged(@NonNull Location location) {
+//        try {
+//            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+//            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+//            String locality = addresses.get(0).getLocality();
+//            String countryName = addresses.get(0).getCountryName();
+//            System.out.println(countryName);
+//            System.out.println(countryName);
+//            System.out.println(countryName);
+//            System.out.println(countryName);
+//            searchQueryEditText.setText(countryName);
+//            searchPexels();
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        locationManager.removeUpdates(this);
+//    }
 
-        locationManager.removeUpdates(this);
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//
+//        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//            requestLocation();
+//        }
+//    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            requestLocation();
-        }
-    }
-
-    public void requestLocation() {
-        if (locationManager == null) {
-            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        }
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 1000, this);
-            }
-        }
-    }
+//    public void requestLocation() {
+//        if (locationManager == null) {
+//            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+//        }
+//        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+//                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 1000, this);
+//            }
+//        }
+//    }
 
     private void setAdapterToLayout() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

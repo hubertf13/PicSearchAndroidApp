@@ -10,7 +10,7 @@ import dagger.hilt.InstallIn;
 import dagger.hilt.components.SingletonComponent;
 import pl.filipczuk.picsearch.PicturesDatabase;
 import pl.filipczuk.picsearch.api.PexelsApi;
-import pl.filipczuk.picsearch.model.PictureDao;
+import pl.filipczuk.picsearch.database.PictureDao;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

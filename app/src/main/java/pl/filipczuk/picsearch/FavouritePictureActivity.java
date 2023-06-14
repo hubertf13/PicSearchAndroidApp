@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -43,6 +44,7 @@ public class FavouritePictureActivity extends AppCompatActivity {
 
             button.setOnClickListener(view -> {
                 viewModel.deleteFromFavs(picture);
+                Toast.makeText(this, "Removed from favourites", Toast.LENGTH_SHORT).show();
             });
 
             String photographer = picture.getPhotographer();

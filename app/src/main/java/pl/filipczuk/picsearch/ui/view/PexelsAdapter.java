@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pl.filipczuk.picsearch.R;
-import pl.filipczuk.picsearch.model.ListItemClickListener;
 import pl.filipczuk.picsearch.model.Picture;
 
 public class PexelsAdapter extends RecyclerView.Adapter<PexelsAdapter.PexelsViewHolder> {

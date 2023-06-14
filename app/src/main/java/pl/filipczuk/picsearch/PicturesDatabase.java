@@ -10,8 +10,7 @@ import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import pl.filipczuk.picsearch.model.Picture;
-import pl.filipczuk.picsearch.model.PictureDao;
-import pl.filipczuk.picsearch.model.PictureSource;
+import pl.filipczuk.picsearch.database.PictureDao;
 
 @Database(entities = {Picture.class}, version = 3)
 public abstract class PicturesDatabase extends RoomDatabase {
@@ -57,19 +56,4 @@ public abstract class PicturesDatabase extends RoomDatabase {
             return null;
         }
     }
-
-//    public abstract PictureDao getPictureDao();
-
-//    public static class Callback extends RoomDatabase.Callback {
-//        private Provider<PicturesDatabase> database;
-//
-//        @Inject
-//        public Callback(Provider<PicturesDatabase> database) {
-//            this.database = database;
-//        }
-//
-//        public Provider<PicturesDatabase> getDatabase() {
-//            return database;
-//        }
-//    }
 }

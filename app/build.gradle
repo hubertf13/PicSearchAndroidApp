@@ -78,5 +78,5 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:2.5.1"
 
     //Google Maps
-    implementation 'com.google.android.gms:play-services-location:21.0.1'
+//    implementation 'com.google.android.gms:play-services-location:21.0.1'
 }

@@ -1,4 +1,4 @@
-package pl.filipczuk.picsearch.model;
+package pl.filipczuk.picsearch.ui.view;
 
 public interface ListItemClickListener {
     void onListItemClick(int position);

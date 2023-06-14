@@ -1,10 +1,10 @@
-package pl.filipczuk.picsearch.model;
+package pl.filipczuk.picsearch.database;
 
 import android.os.AsyncTask;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -13,6 +13,7 @@ import javax.inject.Singleton;
 import pl.filipczuk.picsearch.BuildConfig;
 import pl.filipczuk.picsearch.api.PexelsApi;
 import pl.filipczuk.picsearch.api.PexelsResponse;
+import pl.filipczuk.picsearch.model.Picture;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,33 +54,24 @@ public class Repository {
 
 
     private void queryPexelsSearchApi(String query, int page) {
-//        PexelsResponse response;
-//        try {
             pexelsApi.searchPictures(query, page, perPage).enqueue(new Callback<>() {
                 @Override
-                public void onResponse(Call<PexelsResponse> call, Response<PexelsResponse> response) {
+                public void onResponse(@NonNull Call<PexelsResponse> call, @NonNull Response<PexelsResponse> response) {
+                    System.out.println(response);
                     PexelsResponse pexelsResponse = response.body();
-                    List<Picture> pictures = pexelsResponse.getPhotos();
-                    liveDataPictures.postValue(pictures);
+                    if (pexelsResponse != null) {
+                        List<Picture> pictures = pexelsResponse.getPhotos();
+                        liveDataPictures.postValue(pictures);
+                    } else {
+                        onFailure(call, new Throwable("PexelsResponse is null"));
+                    }
                 }
 
                 @Override
-                public void onFailure(Call<PexelsResponse> call, Throwable t) {
-
+                public void onFailure(@NonNull Call<PexelsResponse> call, @NonNull Throwable t) {
+                    t.printStackTrace();
                 }
             });
-
-//            Response<PexelsResponse> execute = pexelsApi.searchPictures(query, page, perPage).execute();
-//            response = execute.body();
-//            System.out.println(execute);
-//
-//            if (response != null) {
-//                List<Picture> pictures = response.getPhotos();
-//                liveDataPictures.postValue(pictures);
-//            }
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
     }
 
     public void insert(Picture picture) {

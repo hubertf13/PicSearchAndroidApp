@@ -3,4 +3,5 @@
     <string name="search">Search</string>
     <string name="favourites_menu">Favourites</string>
     <string name="your_favourite_pictures">Your favourite pictures</string>
+    <string name="refresh_app">Refresh</string>
 </resources>
