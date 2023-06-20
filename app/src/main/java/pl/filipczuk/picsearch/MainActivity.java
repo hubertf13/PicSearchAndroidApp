@@ -1,8 +1,14 @@
 package pl.filipczuk.picsearch;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,13 +20,27 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCanceledListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.TaskExecutors;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import dagger.hilt.android.AndroidEntryPoint;
+import pl.filipczuk.picsearch.database.PictureDao;
 import pl.filipczuk.picsearch.model.Picture;
 import pl.filipczuk.picsearch.ui.view.GalleryViewModel;
 import pl.filipczuk.picsearch.ui.view.ListItemClickListener;
@@ -39,18 +59,17 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
     private PexelsAdapter pexelsAdapter;
     private GalleryViewModel viewModel;
     private Integer page;
-//    final static String[] PERMISSIONS = {Manifest.permission.ACCESS_COARSE_LOCATION};
-//    final static int PERMISSIONS_ALL = 1;
-//    private LocationManager locationManager;
+    private final int FINE_PERMISSION_CODE = 1;
+    private Location currentLocation;
+    private FusedLocationProviderClient fusedLocationProviderClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-//        requestPermissions(PERMISSIONS, PERMISSIONS_ALL);
-//        requestLocation();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        new LocationAsyncTask().execute();
 
         getComponents();
         setOnButtonsClick();
@@ -67,6 +86,65 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
                 Toast.makeText(getApplicationContext(), "No results for this search", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private class LocationAsyncTask extends AsyncTask<Void, Void, Void> {
+        @Override
+        protected Void doInBackground(Void... voids) {
+            getLastLocation();
+            return null;
+        }
+    }
+
+    private void getLastLocation() {
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_PERMISSION_CODE);
+            return;
+        }
+        Task<Location> task = fusedLocationProviderClient.getLastLocation();
+        task.addOnSuccessListener(new OnSuccessListener<Location>() {
+            @Override
+            public void onSuccess(Location location) {
+                if (location != null) {
+                    try {
+                        currentLocation = location;
+                        double latitude = currentLocation.getLatitude();
+                        double longitude = currentLocation.getLongitude();
+
+                        Geocoder geocoder = new Geocoder(MainActivity.this, Locale.getDefault());
+                        List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                        String countryName = addresses.get(0).getCountryName();
+                        String locality = addresses.get(0).getLocality();
+                        if (locality != null) {
+                            searchQueryEditText.setText(locality);
+                        } else {
+                            searchQueryEditText.setText(countryName);
+                        }
+
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        });
+        task.addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                searchPexels();
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == FINE_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                getLastLocation();
+            } else {
+                Toast.makeText(this, "Location permission is denied, please allow the permission", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     @Override
@@ -88,46 +166,6 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
         searchQueryEditText.setText(query);
         page = pageNumber;
     }
-
-    //    @Override
-//    public void onLocationChanged(@NonNull Location location) {
-//        try {
-//            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-//            List<Address> addresses = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-//            String locality = addresses.get(0).getLocality();
-//            String countryName = addresses.get(0).getCountryName();
-//            System.out.println(countryName);
-//            System.out.println(countryName);
-//            System.out.println(countryName);
-//            System.out.println(countryName);
-//            searchQueryEditText.setText(countryName);
-//            searchPexels();
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//
-//        locationManager.removeUpdates(this);
-//    }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//
-//        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//            requestLocation();
-//        }
-//    }
-
-//    public void requestLocation() {
-//        if (locationManager == null) {
-//            locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
-//        }
-//        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-//            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-//                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 1000, this);
-//            }
-//        }
-//    }
 
     private void setAdapterToLayout() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -203,6 +241,8 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
             Intent intent = new Intent(getApplicationContext(), FavouritesActivity.class);
 
             startActivity(intent);
+        } else if (id == R.id.locationPicturesMenu) {
+            getLastLocation();
         }
         return true;
     }

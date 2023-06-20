@@ -2,4 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:title="@string/favourites_menu"
         android:id="@+id/favouritesMenu"/>
+    <item android:title="@string/location_pictures"
+        android:id="@+id/locationPicturesMenu"/>
 </menu>
