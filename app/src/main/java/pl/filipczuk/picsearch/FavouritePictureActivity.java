@@ -12,10 +12,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
-import javax.inject.Inject;
-
 import dagger.hilt.android.AndroidEntryPoint;
 import pl.filipczuk.picsearch.model.Picture;
 import pl.filipczuk.picsearch.ui.view.GalleryViewModel;
@@ -37,7 +33,7 @@ public class FavouritePictureActivity extends AppCompatActivity {
         image = findViewById(R.id.separate_picture_iv);
         photographerName = findViewById(R.id.pic_photographer_tv);
         button = findViewById(R.id.save_button);
-        button.setText("Remove from favourite");
+        button.setText(R.string.fav_pic_button);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             Picture picture = getIntent().getParcelableExtra("selectedPicture", Picture.class);

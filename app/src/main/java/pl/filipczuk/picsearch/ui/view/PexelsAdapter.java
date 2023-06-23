@@ -68,7 +68,7 @@ public class PexelsAdapter extends RecyclerView.Adapter<PexelsAdapter.PexelsView
             view.setOnClickListener(this);
         }
 
-        public void bind(Picture picture){
+        public void bind(Picture picture) {
             String photographer = picture.getPhotographer();
             String src = picture.getSrc().getLarge();
 
@@ -77,11 +77,10 @@ public class PexelsAdapter extends RecyclerView.Adapter<PexelsAdapter.PexelsView
             bindOrHideTextView(pictureImageView, src);
         }
 
-        private void bindOrHideTextView(ImageView imageView, String data){
-            if (data == null){
+        private void bindOrHideTextView(ImageView imageView, String data) {
+            if (data == null) {
                 imageView.setVisibility(View.GONE);
-            }
-            else{
+            } else {
                 Picasso.get().load(data).into(imageView);
                 imageView.setVisibility(View.VISIBLE);
             }

@@ -52,26 +52,25 @@ public class Repository {
     }
 
 
-
     private void queryPexelsSearchApi(String query, int page) {
-            pexelsApi.searchPictures(query, page, perPage).enqueue(new Callback<>() {
-                @Override
-                public void onResponse(@NonNull Call<PexelsResponse> call, @NonNull Response<PexelsResponse> response) {
-                    System.out.println(response);
-                    PexelsResponse pexelsResponse = response.body();
-                    if (pexelsResponse != null) {
-                        List<Picture> pictures = pexelsResponse.getPhotos();
-                        liveDataPictures.postValue(pictures);
-                    } else {
-                        onFailure(call, new Throwable("PexelsResponse is null"));
-                    }
+        pexelsApi.searchPictures(query, page, perPage).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(@NonNull Call<PexelsResponse> call, @NonNull Response<PexelsResponse> response) {
+                System.out.println(response);
+                PexelsResponse pexelsResponse = response.body();
+                if (pexelsResponse != null) {
+                    List<Picture> pictures = pexelsResponse.getPhotos();
+                    liveDataPictures.postValue(pictures);
+                } else {
+                    onFailure(call, new Throwable("PexelsResponse is null"));
                 }
+            }
 
-                @Override
-                public void onFailure(@NonNull Call<PexelsResponse> call, @NonNull Throwable t) {
-                    t.printStackTrace();
-                }
-            });
+            @Override
+            public void onFailure(@NonNull Call<PexelsResponse> call, @NonNull Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     public void insert(Picture picture) {

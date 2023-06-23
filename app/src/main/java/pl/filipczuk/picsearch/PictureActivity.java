@@ -1,7 +1,5 @@
 package pl.filipczuk.picsearch;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -13,11 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
 
 import dagger.hilt.android.AndroidEntryPoint;
 import pl.filipczuk.picsearch.model.Picture;
@@ -40,7 +33,7 @@ public class PictureActivity extends AppCompatActivity {
         image = findViewById(R.id.separate_picture_iv);
         photographerName = findViewById(R.id.pic_photographer_tv);
         button = findViewById(R.id.save_button);
-        button.setText("Add to favourite");
+        button.setText(R.string.pic_button);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
             Picture picture = getIntent().getParcelableExtra("selectedPicture", Picture.class);

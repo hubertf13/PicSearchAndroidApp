@@ -15,9 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import pl.filipczuk.picsearch.ui.view.ListItemClickListener;
 import pl.filipczuk.picsearch.model.Picture;
 import pl.filipczuk.picsearch.ui.view.GalleryViewModel;
+import pl.filipczuk.picsearch.ui.view.ListItemClickListener;
 import pl.filipczuk.picsearch.ui.view.PexelsAdapter;
 
 @AndroidEntryPoint

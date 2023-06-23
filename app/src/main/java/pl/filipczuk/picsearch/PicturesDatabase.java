@@ -9,8 +9,8 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import pl.filipczuk.picsearch.model.Picture;
 import pl.filipczuk.picsearch.database.PictureDao;
+import pl.filipczuk.picsearch.model.Picture;
 
 @Database(entities = {Picture.class}, version = 3)
 public abstract class PicturesDatabase extends RoomDatabase {

@@ -27,20 +27,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCanceledListener;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.TaskExecutors;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 import dagger.hilt.android.AndroidEntryPoint;
-import pl.filipczuk.picsearch.database.PictureDao;
 import pl.filipczuk.picsearch.model.Picture;
 import pl.filipczuk.picsearch.ui.view.GalleryViewModel;
 import pl.filipczuk.picsearch.ui.view.ListItemClickListener;
@@ -130,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements ListItemClickList
         task.addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
+                page = 1;
                 searchPexels();
             }
         });

@@ -5,4 +5,6 @@
     <string name="your_favourite_pictures">Your favourite pictures</string>
     <string name="refresh_app">Refresh</string>
     <string name="location_pictures">Location Pictures</string>
+    <string name="fav_pic_button">Remove from favourite</string>
+    <string name="pic_button">Add to favourite</string>
 </resources>
