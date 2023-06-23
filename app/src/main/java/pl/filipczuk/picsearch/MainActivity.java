@@ -42,7 +42,7 @@ import pl.filipczuk.picsearch.ui.view.ListItemClickListener;
 import pl.filipczuk.picsearch.ui.view.PexelsAdapter;
 
 @AndroidEntryPoint
-public class MainActivity extends AppCompatActivity implements ListItemClickListener/*, LocationListener*/ {
+public class MainActivity extends AppCompatActivity implements ListItemClickListener {
 
     private EditText searchQueryEditText;
     private Button searchButton;
